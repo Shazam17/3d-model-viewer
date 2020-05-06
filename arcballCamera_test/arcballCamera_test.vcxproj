@@ -186,7 +186,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="basic.shader" />
+    <None Include="gridShader.shader" />
     <None Include="imgui.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="dep.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

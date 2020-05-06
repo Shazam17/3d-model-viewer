@@ -6,13 +6,15 @@ layout(location = 0) in vec3 pos;
 
 uniform mat4 u_proj;
 uniform mat4 u_view;
+uniform mat4 u_model;
 
-out vec3 fragPos;
+out vec3 fPos;
 
 void main() {
-	gl_Position = u_proj * u_view * vec4(pos, 1);
-	fragPos = pos;
+	gl_Position = u_proj * u_view * u_model * vec4(pos, 1);
+	fPos = pos;
 }
+
 
 
 #shader fragment

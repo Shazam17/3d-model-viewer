@@ -61,7 +61,8 @@ public:
 		}
 		int mode = -1;
 		std::string line;
-		std::stringstream ss[2];
+		std::stringstream ss[3];
+		bool gShader = false;
 		while (!file.eof()) {
 			getline(file, line);
 			if (line.find("shader") != std::string::npos) {
@@ -71,19 +72,31 @@ public:
 				if (line.find("fragment") != std::string::npos) {
 					mode = 1;
 				}
+				if (line.find("geometry") != std::string::npos) {
+					mode = 2;
+					gShader = true;
+				}
 			}
 			else {
 				ss[mode] << line << '\n';
 			}
 			//std::cout << line << std::endl;
 		}
-		std::string strCode[2];
+		std::string strCode[3];
 		strCode[0] = ss[0].str();
 		strCode[1] = ss[1].str();
-		const GLchar * shaderCode[2];
+		if (gShader) {
+			strCode[2] = ss[2].str();
+		}
+
+		const GLchar * shaderCode[3];
 		shaderCode[0] = strCode[0].c_str();
 		shaderCode[1] = strCode[1].c_str();;
-		//std::cout << ss[1].str() << std::endl;
+	
+		
+		
+	
+
 		unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(vertexShader, 1, &shaderCode[0], NULL);
@@ -103,6 +116,23 @@ public:
 			std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
 		};
 		id = glCreateProgram();
+
+		if (gShader) {
+			shaderCode[2] = strCode[2].c_str();;
+			unsigned int geometry = glCreateShader(GL_GEOMETRY_SHADER);
+			glShaderSource(geometry, 1, &shaderCode[2], NULL);
+			glCompileShader(geometry);
+
+			
+			glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+			if (!success) {
+				glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+				std::cout << "ERROR::SHADER::GEOMETRY::COMPILATION_FAILED\n" << infoLog << std::endl;
+			};
+			glAttachShader(id, geometry);
+			glDeleteShader(geometry);
+		}
+
 		glAttachShader(id, vertexShader);
 		glAttachShader(id, fragmentShader);
 		glLinkProgram(id);

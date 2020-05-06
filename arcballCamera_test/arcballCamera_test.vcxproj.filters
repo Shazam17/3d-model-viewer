@@ -78,5 +78,9 @@
   <ItemGroup>
     <None Include="imgui.ini" />
     <None Include="basic.shader" />
+    <None Include="gridShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="dep.txt" />
   </ItemGroup>
 </Project>
